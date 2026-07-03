@@ -1,0 +1,323 @@
+==========================================================
+            TRUQUES WINDOWS 10/11 - AMSOUZA
+==========================================================
+
+Autor...............: AMSOUZA
+Site................: https://www.amsouza.net
+GitHub..............: https://github.com/docker-amsouza/windows-tricks
+Versão..............: 1.0
+Última atualização..: 03/07/2026
+Compatibilidade.....: Windows 10 / Windows 11
+Licença.............: MIT License
+
+==========================================================
+ÍNDICE
+==========================================================
+
+001 - Reiniciar o Driver de Vídeo
+002 - Atualizar Programas com Winget
+003 - Verificar arquivos corrompidos
+004 - Reparar imagem do Windows
+005 - Verificar integridade do disco
+006 - Relatório de Energia
+007 - Relatório de Bateria
+008 - Descobrir chave OEM do Windows
+009 - Informações do Sistema
+010 - Limpar Cache DNS
+011 - Verificar Assinaturas Digitais
+
+==========================================================
+OBSERVAÇÕES
+==========================================================
+
+• Alguns comandos exigem Prompt de Comando ou PowerShell
+  executado como Administrador.
+
+• Alguns recursos podem não estar disponíveis em todas
+  as edições do Windows.
+
+• Sempre realize backup antes de executar comandos que
+  alterem a configuração do sistema.
+
+==========================================================
+
+==========================================================
+TRUQUE #001 - Reiniciar o Driver de Vídeo
+==========================================================
+
+Categoria:
+Sistema
+
+Objetivo:
+Reiniciar o driver gráfico sem reiniciar o computador.
+
+Atalho:
+Win + Ctrl + Shift + B
+
+Descrição:
+• Reinicia o driver de vídeo.
+• A tela pisca rapidamente.
+• Pode recuperar travamentos gráficos.
+
+Compatibilidade:
+• NVIDIA
+• AMD
+• Intel
+
+Necessita Administrador?
+Não
+
+==========================================================
+TRUQUE #002 - Atualizar Programas com Winget
+==========================================================
+
+Categoria:
+Winget
+
+1. Verificar atualizações disponíveis
+
+Comando:
+winget upgrade
+
+Descrição:
+Lista todos os programas instalados que possuem atualização disponível.
+
+----------------------------------------------------------
+
+2. Verificar atualizações (incluindo versões desconhecidas)
+
+Comando:
+winget upgrade --include-unknown
+
+Descrição:
+Exibe aplicativos cuja versão instalada não pôde ser identificada.
+
+----------------------------------------------------------
+
+3. Atualizar todos os programas
+
+Comando:
+winget upgrade --all
+
+Descrição:
+Atualiza automaticamente todos os programas.
+
+----------------------------------------------------------
+
+4. Atualizar todos os programas (incluindo versões desconhecidas)
+
+Comando:
+winget upgrade --all --include-unknown
+
+Descrição:
+Atualiza todos os programas possíveis.
+
+----------------------------------------------------------
+
+5. Atualizar um programa específico
+
+Comando:
+winget upgrade Google.Chrome
+
+Descrição:
+Atualiza apenas o programa informado.
+
+----------------------------------------------------------
+
+6. Listar programas instalados
+
+Comando:
+winget list
+
+Descrição:
+Lista todos os programas reconhecidos pelo Winget.
+
+Observação:
+O parâmetro correto é:
+--include-unknown
+
+==========================================================
+TRUQUE #003 - Verificar Arquivos Corrompidos
+==========================================================
+
+Categoria:
+Reparo do Sistema
+
+Comando:
+sfc /scannow
+
+Descrição:
+Verifica e corrige arquivos protegidos do Windows.
+
+Necessita Administrador?
+Sim
+
+==========================================================
+TRUQUE #004 - Reparar Imagem do Windows
+==========================================================
+
+Categoria:
+Reparo do Sistema
+
+Comando:
+DISM /Online /Cleanup-Image /RestoreHealth
+
+Descrição:
+Repara a imagem do Windows utilizada pelo SFC.
+
+Necessita Administrador?
+Sim
+
+==========================================================
+TRUQUE #005 - Verificar Integridade do Disco
+==========================================================
+
+Categoria:
+Disco
+
+Comando:
+chkdsk C: /scan
+
+Descrição:
+Verifica erros no sistema de arquivos sem reiniciar.
+
+Necessita Administrador?
+Sim
+
+==========================================================
+TRUQUE #006 - Relatório de Energia
+==========================================================
+
+Categoria:
+Energia
+
+Comando:
+powercfg /sleepstudy
+
+Descrição:
+Gera relatório detalhado sobre energia e suspensão.
+
+Necessita Administrador?
+Sim
+
+==========================================================
+TRUQUE #007 - Relatório de Bateria
+==========================================================
+
+Categoria:
+Energia
+
+Comando:
+powercfg /batteryreport
+
+Descrição:
+Gera relatório HTML com a saúde da bateria.
+
+Necessita Administrador?
+Não
+
+==========================================================
+TRUQUE #008 - Descobrir Chave OEM do Windows
+==========================================================
+
+Categoria:
+Licenciamento
+
+Comando:
+wmic path softwarelicensingservice get OA3xOriginalProductKey
+
+Descrição:
+Exibe chave OEM gravada na BIOS (quando disponível).
+
+Necessita Administrador?
+Não
+
+==========================================================
+TRUQUE #009 - Informações do Sistema
+==========================================================
+
+Categoria:
+Sistema
+
+Comando:
+systeminfo
+
+Descrição:
+Mostra informações detalhadas do sistema e hardware.
+
+Necessita Administrador?
+Não
+
+==========================================================
+TRUQUE #010 - Limpar Cache DNS
+==========================================================
+
+Categoria:
+Rede
+
+Comando:
+ipconfig /flushdns
+
+Descrição:
+Limpa cache DNS do Windows.
+
+Necessita Administrador?
+Sim
+
+==========================================================
+TRUQUE #011 - Verificar Assinaturas Digitais
+==========================================================
+
+Categoria:
+Segurança
+
+Executar:
+Win + R
+
+Digite:
+sigverif
+
+Descrição:
+Abre o Verificador de Assinaturas de Arquivos do Windows.
+
+Funções:
+• Verifica arquivos do sistema
+• Detecta arquivos sem assinatura digital
+• Auxilia auditoria de integridade
+• Gera relatório de verificação
+
+Quando usar:
+• Após malware
+• Após corrupção do sistema
+• Auditoria de drivers
+• Diagnóstico do Windows
+
+Compatibilidade:
+• Windows 10
+• Windows 11
+
+Necessita Administrador?
+Não
+
+==========================================================
+INFORMAÇÕES
+==========================================================
+
+Projeto............: TRUQUES WINDOWS 10/11
+Autor..............: AMSOUZA
+Site...............: https://www.amsouza.net
+GitHub.............: https://github.com/docker-amsouza/windows-tricks
+Versão.............: 1.0
+Licença............: MIT License
+
+==========================================================
+Obrigado por utilizar este projeto!
+
+Caso encontre erros ou queira sugerir melhorias,
+abra uma Issue ou envie um Pull Request.
+
+Projeto:
+https://github.com/docker-amsouza/windows-tricks
+
+© 2026 AMSOUZA
+==========================================================
