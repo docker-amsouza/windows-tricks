@@ -5,9 +5,9 @@
 Autor...............: AMSOUZA
 Site................: https://www.amsouza.net
 GitHub..............: https://github.com/docker-amsouza/windows-tricks
-Versão..............: 1.0
-Última atualização..: 03/07/2026
-Compatibilidade.....: Windows 10 / Windows 11
+Versão..............: 2.0
+Última atualização..: 09/07/2026
+Compatibilidade.....: Windows 10 e Windows 11
 Licença.............: MIT License
 
 ==========================================================
@@ -16,15 +16,17 @@ Licença.............: MIT License
 
 001 - Reiniciar o Driver de Vídeo
 002 - Atualizar Programas com Winget
-003 - Verificar arquivos corrompidos
-004 - Reparar imagem do Windows
-005 - Verificar integridade do disco
-006 - Relatório de Energia
-007 - Relatório de Bateria
-008 - Descobrir chave OEM do Windows
+003 - Verificar Arquivos Corrompidos (SFC)
+004 - Reparar a Imagem do Windows (DISM)
+005 - Verificar a Integridade do Disco (CHKDSK)
+006 - Gerar Relatório de Energia
+007 - Gerar Relatório de Bateria
+008 - Exibir a Chave OEM do Windows
 009 - Informações do Sistema
-010 - Limpar Cache DNS
+010 - Limpar o Cache DNS
 011 - Verificar Assinaturas Digitais
+012 - Limpeza do Sistema Windows (BAT)
+013 - Driver Verifier (Verificador de Drivers)
 
 ==========================================================
 OBSERVAÇÕES
@@ -40,6 +42,23 @@ OBSERVAÇÕES
   alterem a configuração do sistema.
 
 ==========================================================
+
+==========================================================
+NÍVEIS DE DIFICULDADE
+==========================================================
+
+🟢 Básico
+Pode ser executado pela maioria dos usuários sem riscos
+significativos.
+
+🟡 Intermediário
+Requer conhecimentos básicos de Windows. Recomenda-se
+atenção antes da execução.
+
+🔴 Avançado
+Destinado a profissionais de TI e administradores de
+sistemas. O uso incorreto pode causar instabilidade,
+travamentos ou indisponibilidade do sistema.
 
 ==========================================================
 TRUQUE #001 - Reiniciar o Driver de Vídeo
@@ -67,6 +86,9 @@ Compatibilidade:
 Necessita Administrador?
 Não
 
+Nível:
+🟢 Básico
+
 ==========================================================
 TRUQUE #002 - Atualizar Programas com Winget
 ==========================================================
@@ -74,57 +96,80 @@ TRUQUE #002 - Atualizar Programas com Winget
 Categoria:
 Winget
 
-1. Verificar atualizações disponíveis
+Recomendação:
+Execute periodicamente os comandos abaixo (semanalmente ou
+quinzenalmente) para manter os repositórios do Winget
+atualizados e instalar as versões mais recentes dos programas.
+
+----------------------------------------------------------
+
+1. Atualizar as fontes do Winget
+
+Comando:
+winget source update
+
+Descrição:
+Atualiza os repositórios (fontes) utilizados pelo Winget para
+localizar novas versões dos aplicativos. Recomenda-se executar
+este comando antes de verificar ou instalar atualizações.
+
+----------------------------------------------------------
+
+2. Verificar atualizações disponíveis
 
 Comando:
 winget upgrade
 
 Descrição:
-Lista todos os programas instalados que possuem atualização disponível.
+Lista todos os programas instalados que possuem atualizações
+disponíveis.
 
 ----------------------------------------------------------
 
-2. Verificar atualizações (incluindo versões desconhecidas)
+3. Verificar atualizações (incluindo versões desconhecidas)
 
 Comando:
 winget upgrade --include-unknown
 
 Descrição:
-Exibe aplicativos cuja versão instalada não pôde ser identificada.
+Lista também os aplicativos cuja versão instalada não pôde ser
+identificada pelo Winget.
 
 ----------------------------------------------------------
 
-3. Atualizar todos os programas
+4. Atualizar todos os programas
 
 Comando:
 winget upgrade --all
 
 Descrição:
-Atualiza automaticamente todos os programas.
+Atualiza automaticamente todos os programas que possuem novas
+versões.
 
 ----------------------------------------------------------
 
-4. Atualizar todos os programas (incluindo versões desconhecidas)
+5. Atualizar todos os programas (incluindo versões desconhecidas)
 
 Comando:
 winget upgrade --all --include-unknown
 
 Descrição:
-Atualiza todos os programas possíveis.
+Atualiza todos os aplicativos possíveis, incluindo aqueles cuja
+versão instalada é identificada como "Unknown".
 
 ----------------------------------------------------------
 
-5. Atualizar um programa específico
+6. Atualizar um programa específico
 
 Comando:
 winget upgrade Google.Chrome
 
 Descrição:
-Atualiza apenas o programa informado.
+Atualiza apenas o aplicativo informado.
 
 ----------------------------------------------------------
 
-6. Listar programas instalados
+7. Listar programas instalados
 
 Comando:
 winget list
@@ -132,12 +177,46 @@ winget list
 Descrição:
 Lista todos os programas reconhecidos pelo Winget.
 
+----------------------------------------------------------
+
+8. Listar programas instalados (incluindo versões desconhecidas)
+
+Comando:
+winget list --include-unknown
+
+Descrição:
+Lista todos os programas, inclusive aqueles cuja versão instalada
+não pôde ser identificada pelo Winget.
+
+----------------------------------------------------------
+
+Observações:
+
+• O parâmetro correto para incluir aplicativos com versão
+  desconhecida é:
+  --include-unknown
+
+• Alguns aplicativos podem aparecer com a versão "Unknown".
+  Isso ocorre porque o programa não registra corretamente sua
+  versão no Windows ou o manifesto do Winget não consegue
+  identificá-la.
+
+• Nesses casos, o Winget pode oferecer a mesma atualização
+  repetidamente, mesmo quando o aplicativo já está na versão
+  mais recente.
+
+Necessita Administrador?
+Não
+
 Observação:
-O parâmetro correto é:
---include-unknown
+Alguns instaladores podem solicitar privilégios de
+Administrador (UAC) durante a atualização.
+
+Nível:
+🟢 Básico
 
 ==========================================================
-TRUQUE #003 - Verificar Arquivos Corrompidos
+TRUQUE #003 - Verificar Arquivos Corrompidos (SFC)
 ==========================================================
 
 Categoria:
@@ -147,13 +226,18 @@ Comando:
 sfc /scannow
 
 Descrição:
-Verifica e corrige arquivos protegidos do Windows.
+Verifica e corrige arquivos protegidos do Windows,
+substituindo automaticamente arquivos corrompidos
+quando possível.
 
 Necessita Administrador?
 Sim
 
+Nível:
+🟢 Básico
+
 ==========================================================
-TRUQUE #004 - Reparar Imagem do Windows
+TRUQUE #004 - Reparar a Imagem do Windows (DISM)
 ==========================================================
 
 Categoria:
@@ -163,13 +247,21 @@ Comando:
 DISM /Online /Cleanup-Image /RestoreHealth
 
 Descrição:
-Repara a imagem do Windows utilizada pelo SFC.
+Verifica e repara a imagem do Windows utilizada pelo
+SFC para restaurar arquivos corrompidos.
+
+Recomendação:
+Execute este comando antes do SFC caso o Windows
+apresente falhas que o SFC não consiga corrigir.
 
 Necessita Administrador?
 Sim
 
+Nível:
+🟡 Intermediário
+
 ==========================================================
-TRUQUE #005 - Verificar Integridade do Disco
+TRUQUE #005 - Verificar a Integridade do Disco (CHKDSK)
 ==========================================================
 
 Categoria:
@@ -179,26 +271,44 @@ Comando:
 chkdsk C: /scan
 
 Descrição:
-Verifica erros no sistema de arquivos sem reiniciar.
+Verifica erros no sistema de arquivos da unidade sem
+necessidade de reiniciar o computador.
+
+Observação:
+Caso sejam encontrados erros que não possam ser
+corrigidos com a unidade em uso, poderá ser necessário
+executar uma verificação durante a inicialização do
+Windows.
 
 Necessita Administrador?
 Sim
 
+Nível:
+🟡 Intermediário
+
 ==========================================================
-TRUQUE #006 - Relatório de Energia
+TRUQUE #006 - Gerar Relatório de Energia
 ==========================================================
 
 Categoria:
 Energia
 
 Comando:
-powercfg /sleepstudy
+powercfg /energy
 
 Descrição:
-Gera relatório detalhado sobre energia e suspensão.
+Gera um relatório HTML contendo informações sobre
+consumo de energia, configurações e possíveis
+problemas relacionados ao gerenciamento de energia.
+
+Saída:
+energy-report.html
 
 Necessita Administrador?
 Sim
+
+Nível:
+🟡 Intermediário
 
 ==========================================================
 TRUQUE #007 - Relatório de Bateria
@@ -216,6 +326,9 @@ Gera relatório HTML com a saúde da bateria.
 Necessita Administrador?
 Não
 
+Nível:
+🟢 Básico
+
 ==========================================================
 TRUQUE #008 - Descobrir Chave OEM do Windows
 ==========================================================
@@ -223,14 +336,24 @@ TRUQUE #008 - Descobrir Chave OEM do Windows
 Categoria:
 Licenciamento
 
-Comando:
+Comando (CMD):
 wmic path softwarelicensingservice get OA3xOriginalProductKey
 
+Comando (PowerShell):
+(Get-CimInstance -Class SoftwareLicensingService).OA3xOriginalProductKey
+
 Descrição:
-Exibe chave OEM gravada na BIOS (quando disponível).
+Exibe a chave OEM gravada na BIOS/UEFI (quando disponível).
+
+Observação:
+O WMIC está obsoleto nas versões mais recentes do Windows.
+Prefira o comando PowerShell quando disponível.
 
 Necessita Administrador?
 Não
+
+Nível:
+🟢 Básico
 
 ==========================================================
 TRUQUE #009 - Informações do Sistema
@@ -248,6 +371,9 @@ Mostra informações detalhadas do sistema e hardware.
 Necessita Administrador?
 Não
 
+Nível:
+🟢 Básico
+
 ==========================================================
 TRUQUE #010 - Limpar Cache DNS
 ==========================================================
@@ -263,6 +389,9 @@ Limpa cache DNS do Windows.
 
 Necessita Administrador?
 Sim
+
+Nível:
+🟢 Básico
 
 ==========================================================
 TRUQUE #011 - Verificar Assinaturas Digitais
@@ -283,11 +412,11 @@ Abre o Verificador de Assinaturas de Arquivos do Windows.
 Funções:
 • Verifica arquivos do sistema
 • Detecta arquivos sem assinatura digital
-• Auxilia auditoria de integridade
+• Auxilia na auditoria de integridade
 • Gera relatório de verificação
 
 Quando usar:
-• Após malware
+• Após infecção por malware
 • Após corrupção do sistema
 • Auditoria de drivers
 • Diagnóstico do Windows
@@ -299,6 +428,107 @@ Compatibilidade:
 Necessita Administrador?
 Não
 
+Nível:
+🟡 Intermediário
+
+==========================================================
+TRUQUE #012 - Limpeza do Sistema Windows (BAT)
+==========================================================
+
+Categoria:
+Manutenção / Sistema
+
+Arquivo:
+limpeza.bat
+
+Objetivo:
+Realizar limpeza básica de arquivos temporários e cache do Windows para melhorar desempenho e liberar espaço.
+
+Conteúdo do script:
+
+@echo off
+title Limpeza do Sistema Windows
+color 0A
+
+echo ================================
+echo     LIMPEZA DO SISTEMA
+echo ================================
+
+echo Limpando arquivos temporarios...
+del /s /f /q %temp%\* >nul 2>&1
+del /s /f /q C:\Windows\Temp\* >nul 2>&1
+
+echo Limpando cache DNS...
+ipconfig /flushdns
+
+echo Limpando arquivos de prefetch...
+del /s /f /q C:\Windows\Prefetch\* >nul 2>&1
+
+echo.
+echo ================================
+echo LIMPEZA CONCLUIDA COM SUCESSO
+echo ================================
+pause
+
+Descrição:
+• Remove arquivos temporários do usuário
+• Limpa pasta TEMP do Windows
+• Limpa cache DNS
+• Limpa arquivos Prefetch
+• Executa limpeza automática via script .bat
+
+Quando usar:
+• Sistema lento
+• Acúmulo de arquivos temporários
+• Problemas leves de rede (DNS)
+• Manutenção preventiva
+
+Compatibilidade:
+• Windows 10
+• Windows 11
+
+Necessita Administrador?
+Sim (recomendado para limpeza completa)
+
+Nível:
+🟢 Básico
+
+==========================================================
+TRUQUE #013 - Driver Verifier (Verificador de Drivers)
+==========================================================
+
+Categoria:
+Diagnóstico
+
+Executar:
+Win + R
+
+Comando:
+verifier
+
+Descrição:
+Abre o Driver Verifier, ferramenta nativa do Windows
+utilizada para identificar drivers defeituosos,
+incompatíveis ou que possam causar erros como
+telas azuis (BSOD).
+
+Atenção:
+• Utilize apenas para diagnóstico.
+• Não habilite a verificação de todos os drivers
+  em computadores de produção.
+• Pode causar lentidão ou telas azuis durante os testes.
+• Após finalizar os testes execute:
+
+  verifier /reset
+
+e reinicie o computador.
+
+Necessita Administrador?
+Sim
+
+Nível:
+🔴 Avançado
+
 ==========================================================
 INFORMAÇÕES
 ==========================================================
@@ -307,8 +537,23 @@ Projeto............: TRUQUES WINDOWS 10/11
 Autor..............: AMSOUZA
 Site...............: https://www.amsouza.net
 GitHub.............: https://github.com/docker-amsouza/windows-tricks
-Versão.............: 1.0
+Versão.............: 2.0
 Licença............: MIT License
+
+==========================================================HISTÓRICO DE VERSÕES
+==========================================================
+
+Versão 2.0 (09/07/2026)
+
+• Novo índice.
+• Inclusão dos níveis de dificuldade.
+• Melhorias nas descrições técnicas.
+• Atualização dos comandos do Winget.
+• Inclusão do Driver Verifier.
+• Inclusão do relatório de energia.
+• Inclusão de observações de segurança.
+
+==========================================================
 
 ==========================================================
 Obrigado por utilizar este projeto!
