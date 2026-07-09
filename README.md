@@ -49,8 +49,8 @@ Criar uma referência simples, gratuita e organizada contendo comandos úteis do
 
 ## 📅 Versão
 
-- **v1.0**
-- Última atualização: **03/07/2026**
+- **v2.0**
+- Última atualização: **09/07/2026**
 
 ---
 
